@@ -1,0 +1,322 @@
+package com.poc.insurancepolicypocwithdatabase;
+
+
+/////////////////
+
+rule "AnnualIncome"
+	dialect "mvel"
+	ruleflow-group "check"
+	when
+	$D:Insurance($H:100000 ,annualIncome>=$H  )
+	then
+	$D.setStatusAnnualIncome("Pass")
+end
+
+rule "AnnualIncomeFail"
+	dialect "mvel"
+	ruleflow-group "check"
+	when
+	$D:Insurance($H:100000,annualIncome<$H  )
+	then
+	$D.setStatusAnnualIncome("Annual Income fail")
+	System.out.println("Annual Income Fail");
+end
+
+
+
+rule "PremiumAmount"
+	dialect "mvel"
+	ruleflow-group "check"
+	when
+	$D:Insurance($K:premiumAmount, $K<=(annualIncome*50/100)	)
+	then
+	$D.setStatusPremiumAmount("Pass")
+end
+
+rule "PremiumAmountF"
+	dialect "mvel"
+	ruleflow-group "check"
+	when
+	$D:Insurance($K:premiumAmount, $K>(annualIncome*50/100)	)
+	then
+	$D.setStatusPremiumAmount("Fail in  PremiumAmount")
+end
+
+
+rule "Age"
+	dialect "mvel"
+	ruleflow-group "check"
+	when
+	$D:Insurance(age>=17 ||	age>=18 || age<=55)
+	then
+	$D.setStatusAge("Pass")
+end
+
+rule "AgeF"
+	dialect "mvel"
+	ruleflow-group "check"
+	when
+	$D:Insurance(age<17 || age>=55)
+	then
+	$D.setStatusAge("Fail in Age")
+end
+
+
+ rule "Nationality"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(nationality=="Indian" )
+	then
+	$D.setStatusNationality("Pass")
+end
+
+rule "NRI/PIO"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(nationality=="NRI" || nationality=="PIO"  )
+	then
+	$D.setStatusNationality("Nationality Fail")
+	System.out.println("Nationality Fail");
+end
+
+
+
+rule "Education"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(education=="10th Pass" ||  education=="12th Pass" || education=="Diploma" || education=="Graduate"  
+	 ||  education=="Post Graduate" || education=="Post Graduate and Above"	)
+	then
+	$D.setStatusEducation("Pass")
+end
+
+rule "EducationF"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(education=="Uneducated" ||  education=="Other" || education=="Illiterate" || education=="Below 10th"  	)
+	then
+	$D.setStatusEducation("Education Fail")
+	
+end
+
+rule "Nominee"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(nominee=="Father" || nominee=="Husband" || nominee=="Mother" || nominee=="Spouse" || nominee=="Wife" || nominee=="Son" || nominee=="Daughter"
+	|| nominee=="Grand Daughter" || nominee=="Grand Son" )
+	then
+	$D.setStatusNominee("Pass")
+end
+
+rule "NomineeF"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(nominee=="Other" )
+	then
+	$D.setStatusNominee("Fail In nominee")
+end
+
+rule "Channel"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(channel=="BANCA" || channel=="BANCA NORTH and SOUTH" || channel=="Bancassurance"
+	|| channel=="Bancassurance-BOB" || channel=="Bancassurance-UBI"  )
+	then
+	$D.setStatusChannel("Pass")
+end
+
+rule "ChannelF"
+	dialect "mvel"
+	ruleflow-group "check1"
+	when
+	$D:Insurance(channel=="NON BANCA" || channel=="BOB" || channel=="Digital" || channel=="ER" || channel=="RRB"  )
+	then
+	$D.setStatusChannel("Fail in Channel")
+end
+
+rule "Occupation"
+  dialect "mvel"
+  ruleflow-group "check1"
+  when
+  	$D:Insurance(occupation=="Salaried Person" || occupation=="Professional" || occupation=="Salesman-Including Counter" || occupation=="Business Owner" 
+  	|| occupation=="Student"  || occupation=="Housewife"  )
+	then
+	$D.setStatusOccupation("Pass")
+end
+
+rule "OccupationF"
+  dialect "mvel"
+  ruleflow-group "check1"
+  when
+  	$D:Insurance(occupation=="Other"   )
+	then
+	$D.setStatusOccupation("Fail In Occupation")
+end
+
+    ////////////////////
+
+/*
+rule "AnnualIncome"
+	dialect "mvel"
+//	ruleflow-group "check"
+	when
+	$D:Insurance($H:100000 ,annualIncome>=$H  )
+	then
+	$D.setStatusAnnualIncome("Pass")
+end
+
+rule "AnnualIncomeFail"
+	dialect "mvel"
+//	ruleflow-group "check"
+	when
+	$D:Insurance($H:100000,annualIncome<$H  )
+	then
+	$D.setStatusAnnualIncome("Annual Income fail")
+	System.out.println("Annual Income Fail");
+end
+
+
+
+rule "PremiumAmount"
+	dialect "mvel"
+//	ruleflow-group "check"
+	when
+	$D:Insurance($K:premiumAmount, $K<=(annualIncome*50/100)	)
+	then
+	$D.setStatusPremiumAmount("Pass")
+end
+
+rule "PremiumAmountF"
+	dialect "mvel"
+//	ruleflow-group "check"
+	when
+	$D:Insurance($K:premiumAmount, $K>(annualIncome*50/100)	)
+	then
+	$D.setStatusPremiumAmount("Fail in  PremiumAmount")
+end
+
+
+rule "Age"
+	dialect "mvel"
+//	ruleflow-group "check"
+	when
+	$D:Insurance(age>=17 ||	age>=18 || age<=55)
+	then
+	$D.setStatusAge("Pass")
+end
+
+rule "AgeF"
+	dialect "mvel"
+//	ruleflow-group "check"
+	when
+	$D:Insurance(age<17 || age>=55)
+	then
+	$D.setStatusAge("Fail in Age")
+end
+
+
+ rule "Nationality"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(nationality=="Indian" )
+	then
+	$D.setStatusNationality("Pass")
+end
+
+rule "NRI/PIO"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(nationality=="NRI" || nationality=="PIO"  )
+	then
+	$D.setStatusNationality("Nationality Fail")
+	System.out.println("Nationality Fail");
+end
+
+
+
+rule "Education"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(education=="10th Pass" ||  education=="12th Pass" || education=="Diploma" || education=="Graduate"  
+	 ||  education=="Post Graduate" || education=="Post Graduate and Above"	)
+	then
+	$D.setStatusEducation("Pass")
+end
+
+rule "EducationF"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(education=="Uneducated" ||  education=="Other" || education=="Illiterate" || education=="Below 10th"  	)
+	then
+	$D.setStatusEducation("Education Fail")
+	
+end
+
+rule "Nominee"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(nominee=="Father" || nominee=="Husband" || nominee=="Mother" || nominee=="Spouse" || nominee=="Wife" || nominee=="Son" || nominee=="Daughter"
+	|| nominee=="Grand Daughter" || nominee=="Grand Son" )
+	then
+	$D.setStatusNominee("Pass")
+end
+
+rule "NomineeF"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(nominee=="Other" )
+	then
+	$D.setStatusNominee("Fail In nominee")
+end
+
+rule "Channel"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(channel=="BANCA" || channel=="BANCA NORTH and SOUTH" || channel=="Bancassurance"
+	|| channel=="Bancassurance-BOB" || channel=="Bancassurance-UBI"  )
+	then
+	$D.setStatusChannel("Pass")
+end
+
+rule "ChannelF"
+	dialect "mvel"
+//	ruleflow-group "check1"
+	when
+	$D:Insurance(channel=="NON BANCA" || channel=="BOB" || channel=="Digital" || channel=="ER" || channel=="RRB"  )
+	then
+	$D.setStatusChannel("Fail in Channel")
+end
+
+rule "Occupation"
+  dialect "mvel"
+//  ruleflow-group "check1"
+  when
+  	$D:Insurance(occupation=="Salaried Person" || occupation=="Professional" || occupation=="Salesman-Including Counter" || occupation=="Business Owner" 
+  	|| occupation=="Student"  || occupation=="Housewife"  )
+	then
+	$D.setStatusOccupation("Pass")
+end
+
+rule "OccupationF"
+  dialect "mvel"
+//  ruleflow-group "check1"
+  when
+  	$D:Insurance(occupation=="Other"   )
+	then
+	$D.setStatusOccupation("Fail In Occupation")
+end
+*/
